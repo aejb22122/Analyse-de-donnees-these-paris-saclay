@@ -516,4 +516,14 @@ ggplot(Data, aes(x = Data$`Remittances recus 2014`)) + geom_histogram(bins = 30)
 ggplot(Data, aes(x = Data$`APD nette recue 2014`, fill = Niveau)) + geom_histogram(bins = 30)
 
 
+### Fig 18
+library(readxl)
+Data <- read_excel("~/OneDrive/Documents/Data/WGI_new.xlsx",
+col_types = c("blank", "text", "text",
+"numeric"))
+View(Data)
+colnames(Data) = c("Niveau de revenu", "WGI", "Valeur")
+colnames(Data) = c("Niveau de revenu", "WGI", "Valeur")
+View(Data)
+ggplot(Data) + geom_boxplot(aes(x = Data$WGI, Data$Valeur)) + facet_grid(.~Data$`Niveau de revenu`) + xlab("Indicateurs de gouvernance") + ylab("Valeur") + theme(axis.text.x = element_text(angle = 90, hjust = 1, nrow(4)))
 
