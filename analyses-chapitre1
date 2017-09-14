@@ -41,6 +41,16 @@ library("ggplot2")                      # load le library ggplot2
 install.packages("calibrate")           # Pour ajouter les noms des points dans un scatter plot
 library(calibrate)                      # load the calibrate package
 
+# Load le packet qui permet de faire le reshaping et le melt:
+install.packages("reshape2")
+library(reshape2)
+
+# Remove the scientific notations
+options(scipen=999)
+
+# En francais :
+Sys.setenv(LANG = "fr")
+
 
 # Importer des fichiers sur Excel (1er facon de faire)
 # sheetIndex=1 nous dis quelle feuille on veut lire dans le fichier xlsx
@@ -257,7 +267,6 @@ colnames(melted_data) = c("Pays", "va.agr.PIB")
 # ploting with ggplot, x = variable and y = value (one can add cathegories)
 ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = va.agr.PIB))
 
-ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = va.agr.PIB))
 
 # Ajouter des valeurs sur les axes x et y
 ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = va.agr.PIB)) + xlab("Groupes economiques") + ylab("Agriculture, valeur ajoutée (% du PIB)")
@@ -375,6 +384,109 @@ ggplot(test_data, aes(date)) +
         geom_line(aes(y = Pays.plus.faibles.à.revenu.intermédiaire, color = "Pays plus faibles à revenu intermédiaire")) + 
         geom_line(aes(y = Pays.à.faible.revenu , color = "Pays à faible revenu"))
 
+### Graphiques de la thèse
+
+#### Graphique # 3 de la thèse
+ggplot(dt, aes(dt$Annees)) + geom_line(aes(y = Pays_Developpes, color = "Pays développés")) + geom_line(aes(y = PVD, color = "PVD")) + geom_line(aes(y = PVD_sans_les_PMA, color = "PVD sans les PMA")) + geom_line(aes(y = PMA_Afrique_Haiti, color = "PMA Afrique et Haiti")) + geom_line(aes(y = PMA_Asie, color = "PMA d'Asie")) + xlab("Années") + ylab("Croissance du PIB par habitant (% annuel)")
+
+#### Graphique # 8 de la thèse
+library(readxl)
+Data <- read_excel("~/OneDrive/Documents/Data/prix_produits_de_base.xlsx", 
+                                    col_types = c("numeric", "numeric", "numeric", 
+                                                  "numeric", "numeric", "numeric"))
+str(Data)
+ggplot(data = Data, aes(Data$Annees)) + geom_line(aes(y = Data$`Crude-oil-average($/bbl)`, color = "Crude-oil-average($/bbl)")) + geom_line(aes(y = Data$`Maize-($/mt)`, color = "Maize-($/mt)")) + geom_line(aes(y = Data$`Sorghum-($/mt)`, color = "Sorghum-($/mt)")) + geom_line(aes(y = Data$`Rice_Thai_5%_($/mt)`, color = "Rice_Thai_5%_($/mt)")) + geom_line(aes(y = Data$`Wheat_US_HRW-($/mt)`, color = "Wheat_US_HRW-($/mt)")) + xlab("Années") + ylab("Prix en dollars US")
+
+#### Figure 9 Situation du commerce externe des PMA
+library(readxl)
+Data <- read_excel("~/OneDrive/Documents/Data/balance_commerciale3.xlsx",
+col_types = c("numeric", "numeric", "numeric",
+"numeric"))
+str(Data)
+
+ggplot(Data, aes(Data$Date)) + geom_line(aes(y = PVD_sans_les_PMA, color = "PVD sans les PMA")) + geom_line(aes(y = PMA, color = "Pays Moins Avancés")) + geom_line(aes(y = PMA_Afrique_Haiti, color = "PMA Afrique + Haiti")) + geom_line(aes(y = PMA_Asie, color = "PMA d'Asie")) + ylab(label="Balance commerciale") +  xlab("Date")
+
+
+#### Figure 12 : IDE
+Data <- read_excel("~/OneDrive/Documents/Data/IDE_GDP.xlsx", col_types = c("numeric", "numeric", "numeric","numeric", "numeric"))
+str(Data)
+melted_data = melt(Data.ide)
+Data.pma = Data
+melted_data = melt(Data.pma)
+View(melted_data)
+# Change the names to make it less confusing if necessary
+colnames(melted_data) = c("Pays", "IDE")
+ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = IDE))
+ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = IDE)) + xlab("Groupe de pays") + ylab("En dollars US courants")
+
+
+# Figure 14 Ressources financières fournies au secteur privé 
+Data <- read_excel("~/OneDrive/Documents/Data/Credit_PIB.xlsx", col_types = c("text", "numeric", "numeric","numeric", "text"))
+str(Data)
+ggplot(Data, aes(x = Data$PIB_par_habitant, y = Data$Credit_int)) + geom_point(aes(color = factor(Data$Categories))) + xlab("PIB par habitant, ($ PPA internationaux courants)") + ylab("Crédit intérieur fourni au secteur privé (% du PIB)")
+
+# Figure 21 Dépenses publiques en fonction des niveaux de revenus
+library(readxl)
+Data <- read_excel("~/OneDrive/Documents/Data/Dep_en % PIB_PIB_per_capita2011.xlsx",
+col_types = c("text", "text", "numeric","numeric", "numeric", "numeric"))
+View(Data)
+str(Data)
+ggplot(Data, aes(x = Data$log_PIB_per_capita, y = Data$`log_dep_pub_en%PIB`)) + geom_point(aes(color = Data$`Niveau de revenus`)) + xlab("PIB per capita (constant 2005 US$) (en log)") + ylab("Depenses publiques en (% of GDP) (en log)")
+
+
+#### Figure remittances aide publique au developpement
+Data <- read_excel("~/OneDrive/Documents/Data/APD_Transferts_migrants.xlsx", col_types = c("text", "text", "numeric", "numeric"))
+str(Data)
+Data.pma = Data
+melted_data = melt(Data.pma)
+View(melted_data)
+colnames(melted_data) = c("Pays", "Niveau de revenu", "Sources", "Montant")
+View(melted_data)
+ggplot(melted_data) + geom_boxplot(aes(x = melted_data$Sources, y = melted_data$Montant)) + facet_grid(.~melted_data$`Niveau de revenu`) + xlab("Remittances recus") + ylab("En dollars US courants")
+
+### Graphique population rural urbaine
+library(readxl)
+Data <- read_excel("~/OneDrive/Documents/Data/rural_urbain_long.xlsx",
+col_types = c("numeric", "numeric", "numeric"))
+View(Data)
+str(Data)
+ggplot(data = Data, aes(Data$Date)) + geom_line(aes(y = Data$Urban_population, color = "Population urbaine")) + geom_line(aes(y = Data$Rural_population, color = "Population rurale")) + xlab("Années") + ylab("En million")
+
+# Figure 37 APD et PIB ~ kmoyenne
+library(readxl)
+Data <- read_excel("~/OneDrive/Documents/Data/PIB_const vs AID.xlsx", col_types = c("text", "numeric", "numeric"))
+str(Data)
+ggplot(Data, aes(x = Data$`PIB ppp`, y = Data$APD_2014, label=Data$PMA)) + geom_point() + geom_text(aes(label=PMA), check_overlap = TRUE) + stat_ellipse()
+ggplot(Data, aes(x = Data$`PIB ppp`, y = Data$APD_2014, label=Data$PMA)) + geom_point() + geom_text(aes(label=PMA), check_overlap = TRUE) + stat_ellipse() + xlab("PIB par habitant, (PPA international constant)") + ylab("Aide Publique au Développement (en dollars us)")
+
+
+### Fig12 IDE entrants
+Data <- read_excel("~/OneDrive/Documents/Data/IDE2.xlsx",
+col_types = c("blank", "numeric", "numeric",
+"numeric", "numeric"))
+View(Data)
+melted_data = melt(Data)
+View(Data)
+View(melted_data)
+colnames(melted_data) = c("Agregats", "IDE")
+ggplot(melted_data) + geom_boxplot(aes(x = Agregats, y = IDE)) + xlab("Groupe de pays") + ylab("Investissements étrangers directs
+(en milliards de USD courants)
+")
+
+
+
+
+# Graphique revenu municialites
+Data <- read_excel("~/OneDrive/Documents/Data/Revenus_fiscaux_2011_2016.xlsx",
+col_types = c("numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric"))
+str(Data)
+ggplot(data = Data, aes(Data$Date)) + geom_line(aes(y = Acul_du_Nord, color = "Acul du Nord")) + geom_line(aes(y = Caracol, color = "Caracol")) + geom_line(aes(y = Limonade, color ="Limonade")) + geom_line(aes(y = Ouanaminthe, color ="Ouanaminthe")) + geom_vline(xintercept = 2015) + xlab("Années") + ylab("En dollars US")
+
+
+
 # On peut modifier le graph ... placer la legende en bas: si p=le graph en entier
 p + theme(legend.position="bottom")
 
@@ -402,4 +514,6 @@ ggplot(Data, aes(x = Data$`Remittances recus 2014`)) + geom_histogram(bins = 30)
 # Fill atributes dans les donnees ; c'est comme si on avait deux histogrammes superposes :
 # fait dans estetics : aes(data, variable, et fill = categorie choisie)
 ggplot(Data, aes(x = Data$`APD nette recue 2014`, fill = Niveau)) + geom_histogram(bins = 30)
+
+
 
