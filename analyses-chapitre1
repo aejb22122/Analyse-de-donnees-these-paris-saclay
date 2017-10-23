@@ -30,6 +30,7 @@ rm(list=ls())
 # Lectures de fichiers excel sur R
 
 #### Les codes et les packets avant de commencer 
+# For each graphs, please refer to the thesis source.
 
 setwd("~/OneDrive/Documents/Data")      # set working directory
 install.packages("xlsx")                # Lire les fichers excel "
