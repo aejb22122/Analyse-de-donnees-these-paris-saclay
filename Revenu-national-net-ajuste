@@ -173,3 +173,145 @@ boxplot(df_groupe, frame = FALSE,
                 par groupe de PMA"
         )
         
+
+# -------- PMA GDP ---------
+# US Dollars at constant prices (2010) in millions
+# Data available at : http://unctadstat.unctad.org/wds/TableViewer/tableView.aspx
+library(readxl)
+data.gdp <- read_excel("us_gdptotal_clean.xlsx",
+col_types = c("numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric"))
+View(data.gdp)
+
+
+
+# Removing certain columns related to contries that changed territories or where divided:
+# Because of the amought of NAs
+data.gdp[c("Eritrea", "Ethiopia", "Ethiopia (...1991)", "Sudan", 
+           "Sudan (...2011)", "Timor-Leste", "Yemen", "Yemen, Arab Republic", 
+           "Yemen, Democratic", "South Sudan")] <- NULL
+
+gdp.copy <- data.gdp
+gdp.copy["Date"] <- NULL
+
+boxplot(gdp.copy, las = 2, frame = FALSE, 
+        #ylab = "PIB prix constant PPP",
+        main = "Produit intérieur brut prix courants et constants (2010), 1970-2016") 
+
+# --------- PMA Produit intérieur brut : total et par habitant, prix courants et constants (2010), annuel, 1970-2016
+# Data available at : http://unctadstat.unctad.org/wds/TableViewer/tableView.aspx
+# Produit intérieur brut : total et par habitant, prix courants et constants (2010), annuel, 1970-2016
+
+df <- read_excel("us_pib_par_hab_const_clean.xlsx",
+col_types = c("numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric"))
+View(df)
+
+# Creating a copy and removing the date column :
+df_copy <- df
+df_copy[c("Date")] <- NULL
+# Horizontal boxplot
+boxplot(df_copy, las = 2, horizontal = TRUE, frame = FALSE, 
+        xlab = "Produit intérieur brut", 
+        main = "Produit intérieur brut : total et par habitant, prix courants et constants (2010), annuel, 1971-2016")
+
+# Removing the variable with too much variations
+df2 <- df
+df2[c("Date", "Guinée équatoriale")] <- NULL
+
+# Horizontal boxplot
+boxplot(df2, las = 2, horizontal = TRUE, frame = FALSE,
+        xlab = "Produit intérieur brut par habitant",
+        main = "Produit intérieur brut par habitant à prix constants PPP (2010), annuel, 1971-2016")
+
+# Vertical boxplot
+boxplot(df2, las = 2, frame = FALSE,
+        ylab = "Produit intérieur brut par habitant",
+        main = "Produit intérieur brut par habitant à constants PPP (2010), annuel, 1971-2016")
+
+# ------ Produit intérieur brut : total et par habitant, prix courants et constants (2010), annuel, 1970-2016
+# Produit intérieur brut par habitant, prix constants (2010), annuel, 1970-2016  
+# Par groupe : PMA Afrique et Haiti, PMA Asie, PMA Îles
+
+pma.groupe <- read_excel("Produit intérieur brut par habitant à prix constants (2010) clean.xlsx",
+col_types = c("numeric", "numeric", "numeric",
+"numeric"))
+str(pma.groupe)
+
+# Changing the names to make it clean
+colnames(pma.groupe) = c("année","PMA Afrique et Haiti", "PMA d'Asie","PMA Îles")
+
+
+df_groupe <- pma.groupe
+df_groupe$année <- NULL
+        
+# Vertical boxplot
+boxplot(df_groupe, frame = FALSE, 
+        horizontal = FALSE,
+        col = "gray",
+        #las = 2,
+        ylab = "PIB par habitant en USD",
+        main = "Produit intérieur brut par habitant à prix constants PPP (2010), de 1971-2016
+                par groupe de PMA"
+        )
+
+
+# ------------------- Publications scientifiques dans les PMA
+df <- read.csv2("Publications-scientifiques.csv", sep = ",")
+str(df)
+df2 <- df
+df2$Date <- NULL
+
+# ------------------- Projets et montants investis ----
+df <- read.csv2("Cartographie DEL Haiti.csv", sep = ",")
+View(df)
+df2 <- dfc[-c(1, 2), ]
+hist(df2$Budgets, nclass = 28)
+barplot(df2$Budgets, xlab = "Projets de DEL à financements 'mixtes'", ylab = "Montant en USD")
+
+
+
+
+# -------- PMA GDP - par groupes ---------
+# Produit intérieur brut : total et par habitant, prix courants et constants (2010), annuel, 1970-2016
+# Données disponibles http://unctadstat.unctad.org/wds/TableViewer/tableView.aspx
+
+df <- read_excel("PIB_const_par_hab_groupe_PMA.xlsx",
+col_types = c("numeric", "numeric", "numeric",
+"numeric", "numeric", "numeric",
+"numeric", "numeric"))
+str(df)
+df_copy <- df
+df_copy[c("Annee", "PMA : Afrique et Haiti", "Afrique subsaharienne")] <- NULL
+str(df_copy)
+boxplot(df_copy, main = "Produit intérieur brut : total et par habitant, prix constants PPP (2010), annuel, 1970-2016", frame = FALSE)
+
