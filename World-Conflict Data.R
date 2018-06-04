@@ -1,5 +1,7 @@
 # Violence dans le monde - données : "Uppsala Conflict Data Program, Department of Peace and Conflict Research"
+# Données disponibles http://ucdp.uu.se 
 
+# ----------------- préliminaires -----------
 # First we need to install some required packages first :
 
 # Packages for maps :
@@ -15,6 +17,7 @@ setwd("~/OneDrive/Documents/3. Thesis Data/2017_Data_sets")
 df <- read.csv("ged171.csv")
 str(df)
 
+# ------------------ Plotting the geocoded data on violence -------------
 # Ploting the data
 p <- ggplot(df, aes(x = df$longitude, df$latitude)) + geom_point()
 p
