@@ -2,7 +2,7 @@
 # Codes de réplication des calculs du Chapitre # 1 - augmentés d'autres calculs
 
 # ---- Préliminaires ----
-# Cleaning the session form other the objects in the environment
+# Cleaning the session form other the objects in the environment  
 remove(list=ls())
 ls()
 
