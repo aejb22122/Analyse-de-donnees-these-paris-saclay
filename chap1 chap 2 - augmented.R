@@ -1,5 +1,5 @@
 # ---- Thèse de doctorat Annick Eudes JEAN-BAPTISTE ----
-# Codes de réplication des calculs du Chapitre # 1 -augmentés d'arguments et d'autres calculs
+# Codes de réplication des calculs du Chapitre # 1 - augmentés d'autres calculs
 
 # ---- Préliminaires ----
 # Cleaning the session form other the objects in the environment
@@ -16,7 +16,7 @@ install.packages("ggplot2")             # Installer le packet ggplot2
 install.packages("calibrate")           # Pour ajouter les noms des points dans un scatter plot
 install.packages("reshape2")            # Load le packet qui permet de faire le reshaping et le melt:
 install.packages("ggpubr")              # ggpubr: 'ggplot2' Based Publication Ready Plots - 
-                                        # stat() for the Pearson correlation in the plor
+                                        # stat() for the Pearson correlation in the plot
 
 
 # Loading the required packages : 
