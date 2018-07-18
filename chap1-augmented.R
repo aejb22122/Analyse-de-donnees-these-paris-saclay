@@ -8,11 +8,15 @@ ls()
 
 # setting the working directory
 setwd("~/OneDrive/Documents/2_Data_analysis_research/GitHub/Analyse-de-donnees-these-paris-saclay/datasets")
-install.packages("xlsx")                # Lire les fichers excel "
+
+# Adding the packages used in this analysis
+
+install.packages("xlsx")                # Lire les fichers excel
 install.packages("ggplot2")             # Installer le packet ggplot2
 install.packages("calibrate")           # Pour ajouter les noms des points dans un scatter plot
 install.packages("reshape2")            # Load le packet qui permet de faire le reshaping et le melt:
-install.packages("ggpubr")              # ggpubr: 'ggplot2' Based Publication Ready Plots
+install.packages("ggpubr")              # ggpubr: 'ggplot2' Based Publication Ready Plots - 
+                                        # stat() for the Pearson correlation in the plor
 
 
 # Loading the required packages : 
@@ -20,6 +24,7 @@ library("xlsx")
 library("ggplot2")                
 library(calibrate)                
 library(reshape2)
+library(ggpubr)                         
 
 # Removinng the scientific notations
 options(scipen=999)
@@ -71,7 +76,10 @@ colnames(melted_data) = c("Pays", "va.agr.PIB")
 ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = va.agr.PIB))
 
 # Ajouter des valeurs sur les axes x et y
-ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = va.agr.PIB)) + xlab("Groupes économiques") + ylab("Agriculture, valeur ajoutée (% du PIB)")
+ggplot(melted_data) +
+        geom_boxplot(aes(x = Pays, y = va.agr.PIB)) +
+        xlab("Groupes économiques") + 
+        ylab("Agriculture, valeur ajoutée (% du PIB)")
 
 # ---- Graphique # 8 ----
 # Importer le ficher excel contenu dans le repertoire :"dataset"
@@ -110,9 +118,6 @@ ggplot(df, aes(df$Annee)) +
         xlab("Années")
 
 # ---- Graphique # 11 ----
-library(ggpubr)
-
-
 # Figure 11. Perception de la corruption dans les économies par niveau de revenue
 library(readxl)
 df <- read_excel("CorruptionIndex_GDP_per_capita.xlsx",
@@ -172,4 +177,84 @@ ggplot(melted_data) + geom_boxplot(aes(x = Pays, y = IDE)) +
 # ---- Graphique # 13 ----
 # Figure 13. Incidences de la violence sur les coûts des entreprises
 # par niveaux de développement économique (2015)
+
+
+# ---- Graphique # 14 ----
+# Figure 14. Crédit intérieur au secteur privé par niveaux de revenus en 2015 
+
+library(readxl)
+df <- read_excel("Credit_PIB.xlsx",
+col_types = c("text", "numeric", "numeric",
+"numeric", "text"))
+str(df)
+
+ggplot(df, aes(x = df$`PIB par habitant, ($ PPA internationaux courants)_2015` , y = df$`Crédit intérieur fourni au secteur privé (% du PIB)_2015` )) + 
+        geom_point(aes(color = factor(df$Categories))) + 
+        #geom_smooth(method = "lm", se = TRUE) +
+        scale_color_discrete(name = "Groupe de pays") +
+        stat_cor(method = "pearson", label.x = 150000, label.y = 225) +
+        xlab("PIB par habitant, (USD internationaux courants en PPA)") + 
+        ylab("Crédit intérieur fourni au secteur privé (en pourcentage du PIB)")
+
+# ---- Graphique # 17 ----
+# Figure 17. Ressources internes par groupes de pays
+
+# ---- Graphique # 18 ----
+# Figure 18. Indicateurs de gouvernance des économies en 2015, par niveaux de revenus
+library(readxl)
+df <- read_excel("WGI_new.xlsx", col_types = c("text",
+"text", "text", "numeric"))
+str(df)
+colnames(df) = c("Pays", "Niveau de revenu", "WGI", "Valeur")
+View(df)        # To verify that all is ok
+ggplot(df) + 
+        geom_boxplot(aes(x = df$WGI, df$Valeur)) + 
+        facet_grid(.~df$`Niveau de revenu`) + 
+        xlab("Indicateurs de gouvernance") + 
+        ylab("Valeur") + 
+        theme(axis.text.x = element_text(angle = 90, hjust = 1, nrow(4)))
+
+
+# ---- Graphique # 19 ----
+# Figure 19. Dépenses publiques en fonction des niveaux de revenus en 2011 
+# Figure 21 Dépenses publiques en fonction des niveaux de revenus
+
+library(readxl)
+df <- read_excel("Dep_en % PIB_PIB_per_capita2011.xlsx",
+col_types = c("text", "text", "numeric",
+"numeric", "numeric", "numeric"))
+View(df)
+str(df)
+
+ggplot(df, aes(x = df$log_PIB_per_capita, y = df$`log_dep_pub_en%PIB`)) + 
+        #geom_point(aes(color = df$`Niveau de revenus`)) + 
+        scale_color_discrete(name = "Groupe de pays") +
+        geom_smooth(method = "lm", se = T) +
+        stat_cor(method = "pearson", label.x = 3.6, label.y = 1.7) +
+        xlab("PIB per capita (USD constant 2005) (log)") + 
+        ylab("Dépenses publiques en pourcentage du PIB (log)") +
+        geom_jitter(aes(color = df$`Niveau de revenus`), position=position_jitter(width=.1, height=0))
+
+
+# ---- Graphique # 26 ----
+# Figure 26. L’aide publique au développement et l’envoie de fonds des migrants dans les Pays en Voie 
+# de Développement et dans les Pays les Moins Avancés (en USD courants, 2014)
+library(readxl)
+df <- read_excel("APD_Transferts_migrants.xlsx",
+col_types = c("text", "text", "numeric",
+"numeric"))
+str(df)
+
+df.pma = df
+melted_data = melt(df.pma)
+View(melted_data)
+
+colnames(melted_data) = c("Pays", "Niveau de revenu", "Sources", "Montant")
+View(melted_data)
+
+ggplot(melted_data) + 
+        geom_boxplot(aes(x = melted_data$`Niveau de revenu`, y = melted_data$Montant)) +
+        facet_grid(.~melted_data$Sources) + 
+        xlab("Niveaux de revenus") + 
+        ylab("En millions de USD à prix courants et à PPA")
 
