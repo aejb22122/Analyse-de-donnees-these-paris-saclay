@@ -1,10 +1,17 @@
+# ---- Thèse de doctorat Annick Eudes JEAN-BAPTISTE ----
+# Codes de réplication des calculs de la Carte # 2 de l'introduction
 # Violence dans le monde - données : "Uppsala Conflict Data Program, Department of Peace and Conflict Research"
 # Données disponibles http://ucdp.uu.se 
 
 # ----------------- préliminaires -----------
+# Cleaning the session form other the objects in the environment
+remove(list=ls())
+ls()
+
 # First we need to install some required packages first :
 
 # Packages for maps :
+install.packages("ggplot2")     # ggmap is dependant on the ggplot2 package.
 install.packages("ggmap")
 install.packages("mapproj")
 
@@ -13,7 +20,9 @@ library(ggplot2)
 library(ggmap)
 
 # Setting the working directory and looking at the variables :
-setwd("~/OneDrive/Documents/3. Thesis Data/2017_Data_sets")
+setwd("~/OneDrive/Documents/2_Data_analysis_research/GitHub/Analyse-de-donnees-these-paris-saclay/datasets")
+
+# Importing the data we will be using:
 df <- read.csv("ged171.csv")
 str(df)
 
@@ -26,11 +35,16 @@ p
 p1 <- ggplot(df, aes(x=df$longitude, df$latitude)) + geom_point(position = position_jitter(w = 0.3, h = 0.3)) + xlab("Longitude") + ylab("Latitude")
 p1
 
-# Coordonnées de la carte (centrée sur la République Centre Africaine), que l'on met dans un vecteur sur r:
+# Coordonnées de la carte (centrée sur la République Centre Africaine), que l'on met dans un vecteur sur R:
 center_world <- c(lon = 20.939444, lat = 6.611111)
+#get_map(location = center_world, zoom = "auto", scale = "auto", maptype = c("terrain", "terrain-background", "satellite", "roadmap", "hybrid", "toner", "watercolor", "terrain-labels", "terrain-lines", "toner-2010", "toner-2011", "toner-background", "toner-hybrid", "toner-labels", "toner-lines", "toner-lite"), source = c("google", "osm", "stamen", "cloudmade"), force = ifelse(source == "google", TRUE, TRUE), messaging = FALSE, urlonly = FALSE, filename = "ggmapTemp", crop = TRUE, color = c("color", "bw"), language = "en-EN", api_key)
 
-# Plot map at zoom level 1
-world_map <- get_map(location = center_world, zoom = 1, scale = 1)
+
+# Plot map at zoom level 1:
+#world_map <- get_map(location = center_world, zoom = "auto", scale = "auto")
+# Some times in the get_map() zoom argument, you need to tweek it a little to have the 
+# desired outcome.
+world_map <- get_map(location = center_world, zoom = 2, scale = 1)
 ggmap(world_map)
 
 # Add the plots to the map (the normal non satellite version):
@@ -38,5 +52,6 @@ ggmap(world_map)
 # the gradiant label
 p4 = ggmap(world_map) + geom_point(aes(df$longitude, df$latitude), data = df)
 p4
+
 # Heat map :
 ggmap(world_map, extent = "device") + geom_density2d(data = df, aes(x = df$longitude, y = df$latitude), size = 1) + stat_density2d(data = df, aes(x = df$longitude, y = df$latitude, fill = ..level.., alpha = ..level..), size = 0.01,  bins = 16, geom = "polygon") + scale_fill_gradient(low = "green", high = "red") + scale_alpha(range = c(0, 0.3), guide = FALSE)
