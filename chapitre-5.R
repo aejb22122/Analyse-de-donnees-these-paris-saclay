@@ -1,9 +1,81 @@
+# ---- Thèse de doctorat Annick Eudes JEAN-BAPTISTE ----
+# Codes de réplication des calculs du Chapitre # 5 - Contexte empirique
+
+# ---- Préliminaires ----
+# Adding the packages used in this analysis
+
+install.packages("xlsx")                # Lire les fichers excel
+install.packages("ggplot2")             # Installer le packet ggplot2
+install.packages("calibrate")           # Pour ajouter les noms des points dans un scatter plot
+install.packages("reshape2")            # Load le packet qui permet de faire le reshaping et le melt:
+install.packages("ggpubr")              # ggpubr: 'ggplot2' Based Publication Ready Plots - 
+# stat() for the Pearson correlation in the plot
+
+
+# Loading the required packages : 
+library("xlsx")                   
+library("ggplot2")                
+library(calibrate)                
+library(reshape2)
+library(ggpubr)                         
+
+# Removinng the scientific notations
+options(scipen=999)
+
+# Cleaning the session form other the objects in the environment
+remove(list = ls())
+ls()
+
+# setting the working directory
+setwd("~/OneDrive/Documents/2_Data_analysis_research/GitHub/Analyse-de-donnees-these-paris-saclay/datasets")
+
+# ---- Graphique # 38 ----
+# Figure 38. Transition de la population urbaine/rurale du cas typique
+library(readxl)
+df <- read_excel("rural_urbain_long.xlsx",
+col_types = c("numeric", "numeric", "numeric"))
+View(df)
+str(df)
+
+ggplot(df, aes(df$Date)) + 
+        geom_line(aes(y = df$Urban_population, color = "Population urbaine")) + 
+        geom_line(aes(y = df$Rural_population, color = "Population rurale")) +
+        scale_color_discrete(name = "Couleur") +
+        xlab("Années") +
+        ylab("En million d'habitants")
+
+
+# ---- Graphique # 47 ----
+# Figure 47. Évolution des revenus de quelques municipalités et impact 
+# combiné de l'élection et des mesures de la loi de finances de 2015
+
+
+df <- read_excel("Revenus_fiscaux_2011_2016.xlsx")
+View(Df)
+View(df)
+
+ls()
+ggplot(df, aes(df$Date)) + 
+        geom_line(aes(y = df$Ouanaminthe, color = "Ouanaminthe")) +
+        geom_line(aes(y = df$Caracol, color = "Caracol")) +
+        geom_line(aes(y = df$Acul_du_Nord, color = "Acul du Nord")) +
+        geom_line(aes(y = df$Carrefour, color = "Carrefour")) +
+        geom_line(aes(y = df$Limonade, color = "Limonage")) +
+        geom_line(aes(y = df$Cape_Haitian, color = "Cap-Haitien")) +
+        geom_line(aes(y = df$Kenscoff, color = "Kenscoff")) +
+        geom_line(aes(y = df$Delmas, color = "Delmas")) +
+        geom_line(aes(y = df$Saint_Marc, color = "Saint-Marc")) +
+        xlab("Années") +
+        ylab("En USD")
+
+
+# ---- Graphique # 50 ----
+
+# Figure 50. Cartographie des projets de développement local à financements mixtes relevés de 2013 à 2016
 # Analyses des projets de développement local géo-référencés dans le PMA typique analysé
 # Spacial analysis of the LED projects in the communes 
 # ploting the geo data 
 
-# Setting the working directory
-setwd("/Users/annick/OneDrive/Documents/3. Thesis Data")
 
 # Analyses des projets de développement local géo-référencés dans le PMA typique analysé
 # Spacial analysis of the LED projects in the communes 
@@ -15,16 +87,19 @@ setwd("/Users/annick/OneDrive/Documents/3. Thesis Data")
 install.packages("ggmap")
 install.packages("mapproj")
 
-library(readxl)
 # ------------------ Importing the geo coded data ----
-# Make sure that the variables are numeric = c("numeric pour la premiere colone", "numeric pour la deuxieme", etc)
-geodata <- read_excel("/Users/annick/OneDrive/Documents/3. Thesis Data/geodataled.xlsx", col_types = c("numeric", "numeric", "text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
-#geodata <- read_excel("~/OneDrive/Documents/Data/geodataled.xlsx", col_types = c("numeric", "numeric", "text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"))
+library(readxl)
+geodata <- read_excel("geodataled.xlsx")
+View(geodata)
+
 str(geodata)
 
 # Loading the ggplot package and ggmap, if not done allready running
 library(ggplot2)
 library(ggmap)
+
+attach(geodata)
+
 
 # ------------------ Ploting the data ----
 ggplot(geodata, aes(x= geodata$Longitude, geodata$Latitude)) + geom_point()
@@ -78,22 +153,86 @@ ggmap(map_ht99) + geom_point(aes(geodata$Longitude, geodata$Latitude), data = ge
 # ------------ Adding the budgets to the points ----
 # Centrée sur Hinche :
 # This is the best one :
-ggmap(map_ht9) + geom_point(aes(geodata$Longitude, geodata$Latitude, color = geodata$Budget), data = geodata, alpha = 0.5, size = 8)
+ggmap(map_ht9) + geom_point(aes(geodata$Longitude, geodata$Latitude, 
+                        color = geodata$Budget), 
+                        data = geodata, 
+                        alpha = 0.5, 
+                        size = 8)
+
 # Map avec les financements
 # Adding fiscal revenus to the map
-ggmap(map_ht9) + geom_point(aes(geodata$Longitude, geodata$Latitude, color = geodata$Revenus_t3), data = geodata, alpha = 0.3, size = 8)
+ggmap(map_ht9) + 
+        geom_point(aes(geodata$Longitude, 
+                       geodata$Latitude, 
+                       color = geodata$Revenus_t3), 
+                   data = geodata, 
+                   alpha = 0.3, size = 8)
 
 
 # Centrée sur cap-Haitien :
-ggmap(map_cap) + geom_point(aes(geodata$Longitude, geodata$Latitude, color = geodata$Budget), data = geodata, alpha = 0.6, size = 6)
+ggmap(map_cap) + 
+        geom_point(aes(geodata$Longitude, 
+                       geodata$Latitude, 
+                       color = geodata$Budget), 
+                   data = geodata, 
+                   alpha = 0.6, size = 6)
 
-# An other form of map (toner version, black and white):
-map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "toner")        # un peu noir et blanc
-# Map avec les financements
-ggmap(map_ht) + geom_point(aes(geodata$Longitude, geodata$Latitude, color = geodata$Budget), data = geodata, alpha = 0.5, size = 8)
+
+
+# Adding investment budget to the map
+ggmap(map_ht9) + 
+        geom_point(aes(geodata$Longitude, 
+                       geodata$Latitude, 
+                       color = geodata$Budget), 
+                   data = geodata, 
+                   alpha = 0.3, size = 8)
+
+
+# ---- Different types of maps ----
+
+# https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf
+
+# 1e. Adding the maptypes --> get_map :
+# 2e. Ploting the get_map in the ggmap()  
+
+### 1e. Adding the maptypes --> get_map :
+# a) maptype = toner version - black and white):
+map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "toner") # un peu noir et blanc
+
+# b) maptype = stamen: watercolor ):
+map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "watercolor")  
+#        scale_color_discrete(name = "Budget d'investissement") # un peu noir et blanc
+
+# c) maptype = stamen: terrain from stamen):
+map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "terrain")  
+
+# d) maptype = stamen: terrain from google):
+map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "terrain")  
+
+# e) maptype = roadmap - from google):
+map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "roadmap")  
+
+# f) maptype = google: hybrid):
+map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "hybrid")  
+
+
+### 2e. Ploting the get_map in the ggmap()
+ggmap(map_ht) + 
+        geom_point(aes(geodata$Longitude, geodata$Latitude, color = geodata$Budget), 
+                   data = geodata, alpha = 0.5, size = 10) +
+        xlab("Longitude") +
+        ylab("Latitude")
+
+# Map avec les financements et le type de carte que l'on veut ... "map_ht"
+ggmap(map_ht) + 
+        geom_point(aes(geodata$Longitude, geodata$Latitude, color = geodata$Budget), 
+                   data = geodata, alpha = 0.5, size = 10) +
+        facet_wrap(~ City) +
+        xlab("Longitude") +
+        ylab("Latitude")
 
 # -------------------- Other types of map -----
-# A quick alternative
+# A quick alternative :
 qmplot(Longitude, Latitude, data = geodata, geom = "point", color = Budget) + facet_wrap(~ City)
 
 # Heat map :
