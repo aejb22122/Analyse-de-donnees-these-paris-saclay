@@ -1,4 +1,3 @@
-
 # ---- Thèse de doctorat Annick Eudes JEAN-BAPTISTE ----
 # Codes de réplication de la carte Chapitre # 5 - localisation des projets de DEL par régions
 
@@ -41,6 +40,8 @@ geodata <- read_excel("geodataled.xlsx")
 str(geodata)
 attach(geodata)
 
+# Coordonnées de Haiti (centrée sur Hinche), que l'on met dans un vecteur sur r:
+haiti <- c(lon = -72.01667, lat = 19.15)
 
 # plot map at zoom level 9
 map_ht9 <- get_map(location = haiti, zoom = 9, scale = 1)
@@ -57,14 +58,35 @@ ggmap(map_ht9) +
         geom_point(aes(geodata$Longitude, geodata$Latitude), data = geodata)
 
 # This is to change the map layer types == downloading the map raster
-# d) maptype = stamen: terrain from google):
-map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "terrain") 
-# e) maptype = roadmap - from google):
-map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "roadmap") 
+# ---- Different types of maps ----
+
+# https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf
+# This is done in two steps :
+# 1e. Adding the maptypes --> get_map :  Downloading the map raster
+# 2e. Ploting the get_map in the ggmap() : plotting the map and the data
+
+### 1e. Adding the maptypes --> get_map :
+# a) maptype = toner version - black and white):
+map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "toner") # un peu noir et blanc
+
+# b) maptype = stamen: watercolor ):
+map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "watercolor")  
+#        scale_color_discrete(name = "Budget d'investissement") # un peu noir et blanc
+
 # c) maptype = stamen: terrain from stamen):
-map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "terrain") 
+map_ht <- get_map(haiti, zoom = 9, source = "stamen", maptype = "terrain")  
+
+# d) maptype = stamen: terrain from google):
+map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "terrain")  
+
+# e) maptype = roadmap - from google):
+map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "roadmap")  
+
 # f) maptype = google: hybrid):
 map_ht <- get_map(haiti, zoom = 9, source = "google", maptype = "hybrid")  
+
+
+### 2e. Ploting the get_map in the ggmap()
 
 # These are the ones with the LED by regions :
 # The one with the big dots ...
@@ -72,7 +94,7 @@ ggmap(map_ht) + geom_point(aes(geodata$Longitude, geodata$Latitude),
                             position = position_jitter(w = 0.3, h = 0.3),
                             data = geodata, 
                             alpha = 0.5, 
-                            size = 8)+ 
+                            size = 8) + 
         facet_wrap(.~ City)
 
 # The one with the red points
@@ -81,7 +103,7 @@ ggmap(map_ht) +
                             position = position_jitter(w = 0.1, h = 0.1),
                             data = geodata,
                    color = "red") + 
-        facet_wrap(.~ City)+
+        facet_wrap(.~ City) +
         xlab("Longitude") + 
         ylab("Latitude")
 
@@ -93,7 +115,7 @@ ggmap(map_ht) +
                    data = geodata,
                    alpha = 0.5, 
                    size = 3,
-                   color = "red")  +
+                   color = "red") +
         facet_wrap(.~City) +
         xlab("Longitude") + 
         ylab("Latitude")
