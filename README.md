@@ -4,8 +4,8 @@ Cette thèse a été préparée à [ Paris Saclay ](https://www.universite-paris
 
 Soutenue à Guyancourt, le 7 juin 2018, le jury de thèse était composé de :
 
-* Ivan Sansom (MCF HDR à l’Université de Grenoble, co-directeur de thèse), 
-* Monsieur ASSENS Christophe (Directeur de thèse, Professeur des universités),
+* Ivan Sansom (MCF HDR à l’Université de Grenoble, directeur de thèse), 
+* Monsieur ASSENS Christophe (Co-directeur de thèse, Professeur des universités),
 * Jean-Yves Moisseron (Directeur de recherche HDR, CESSMA-IRD Paris, rapporteur), 
 * Myriam Donsimoni (MCF HDR, Université de Savoie Mont-Blanc, rapporteur), 
 * André Torre (Directeur de recherche Agroparitech INRA, examinateur).
