@@ -23,7 +23,10 @@ library(ggmap)
 setwd("~/OneDrive/Documents/2_Data_analysis_research/GitHub/Analyse-de-donnees-these-paris-saclay/datasets")
 
 # Importing the data we will be using:
-df <- read.csv("ged171.csv")
+# df <- read.csv("ged171.csv") # this is the longer version 1989 to 2016
+library(readxl)
+df <- read_excel("ged171_2010-2016.xlsx")
+
 str(df)
 
 # ------------------ Plotting the geocoded data on violence -------------
@@ -44,14 +47,26 @@ center_world <- c(lon = 20.939444, lat = 6.611111)
 #world_map <- get_map(location = center_world, zoom = "auto", scale = "auto")
 # Some times in the get_map() zoom argument, you need to tweek it a little to have the 
 # desired outcome.
-world_map <- get_map(location = center_world, zoom = 2, scale = 1)
+world_map <- get_map(location = center_world, zoom = 2, scale = 1,  
+                     source = "google", maptype = "terrain") # This part will give the different map estatics.
 ggmap(world_map)
+
+# Different aestetics :
+# maptype = roadmap - from google:
+# world_map <- get_map(location = center_world, zoom = 2, scale = 1, source = "google", maptype = "terrain")
+# maptype = stamen: terrain from stamen):
+# world_map <- get_map(location = center_world, zoom = 2, scale = 1, source = "stamen", maptype = "terrain")  
+
 
 # Add the plots to the map (the normal non satellite version):
 # Remember to leave the color argument inside the aes() function within your geom_point(), to have
 # the gradiant label
-p4 = ggmap(world_map) + geom_point(aes(df$longitude, df$latitude), data = df)
-p4
+ggmap(world_map) + geom_point(aes(df$longitude, df$latitude), 
+                   data = df,
+                   alpha = .025, 
+                   color = "red") +
+        xlab("Longitude") +
+        ylab("Latitude")
 
 # Heat map :
 ggmap(world_map, extent = "device") + geom_density2d(data = df, aes(x = df$longitude, y = df$latitude), size = 1) + stat_density2d(data = df, aes(x = df$longitude, y = df$latitude, fill = ..level.., alpha = ..level..), size = 0.01,  bins = 16, geom = "polygon") + scale_fill_gradient(low = "green", high = "red") + scale_alpha(range = c(0, 0.3), guide = FALSE)
