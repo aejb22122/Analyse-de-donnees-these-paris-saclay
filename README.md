@@ -1,6 +1,6 @@
 # Les mécanismes de financement du développement économique local : caractérisations et stratégies adaptées aux PMA
 
-Cette thèse a été préparée à [ Paris Saclay ](https://www.universite-paris-saclay.fr/en), dans le cadre de Sciences de l'Homme et de la Société, en partenariat avec le [Laboratoire de recherche en Management LAREQUOI (laboratoire) et de université de Versailles-Saint-Quentin-en-Yvelines ](http://www.larequoi.uvsq.fr/larequoi/langue-fr/le-laboratoire/) (établissement de préparation de la thèse).
+Cette thèse a été préparée à [ Paris Saclay ](https://www.universite-paris-saclay.fr/en), dans le cadre de Sciences de l'Homme et de la Société, en partenariat avec le [Laboratoire de recherche en Management LAREQUOI (laboratoire) et de université de Versailles-Saint-Quentin-en-Yvelines ](http://www.larequoi.uvsq.fr/) (établissement de préparation de la thèse).
 
 Soutenue à Guyancourt, le 7 juin 2018, le jury de thèse était composé de :
 
