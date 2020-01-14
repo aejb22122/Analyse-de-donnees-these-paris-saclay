@@ -98,7 +98,7 @@ plot(clusters, labels = df$Economy)
 plot(clusters, labels = df$Economy, hang = -1) # Pour aligner les labels.
 
 # On peut indiquer le nombre de groupes
-# on doit spécifier oubien la "hateure" ou bien le nobmre de groupes retenus;
+# on doit spécifier oubien la "hauteur" ou bien le nombre de groupes retenus;
 
 g3 = cutree(clusters, k = 3) # "g3" = "Groupe 3"
                                 # C'est comme si on coupait une branche de l'arbre, du dendogram        
